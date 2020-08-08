@@ -2,5 +2,16 @@
   "name": "reactive",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "jest": "^26.2.2",
+    "ts-jest": "^26.1.4"
+  },
+  "dependencies": {
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "test": "jest"
+  }
 }
