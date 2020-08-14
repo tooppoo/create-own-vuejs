@@ -2,7 +2,7 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 
-const root = path.resolve('../public')
+const root = path.resolve(__dirname, '..')
 const mimeTypes = {
   '.html': 'text/html',
   '.js': 'text/javascript',
@@ -21,18 +21,23 @@ const mimeTypes = {
 }
 
 http.createServer((req, res) => {
-  const filePath = req.url === '/' ?
-    path.resolve(root, 'index.html') :
-    path.resolve(root, req.url)
+  const url = req.url
+  const filePath = url === '/' ?
+    path.resolve(root, 'public', 'index.html') :
+    path.resolve(root, ...url.split('/'))
+
+  console.log({ filePath, url })
 
   const extname = String(path.extname(filePath)).toLowerCase();
   const contentType = mimeTypes[extname] || 'application/octet-stream';
 
   fs.readFile(filePath, (error, content) => {
     if (error) {
-      res.writeHead(500)
+      res.writeHead(500, { 'Content-Type': contentType })
       res.end(error.message)
       res.end()
+
+      console.error({ error })
     } else {
       res.writeHead(200, { 'Content-Type': contentType })
       res.end(content, 'utf-8')

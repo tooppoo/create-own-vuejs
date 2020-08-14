@@ -9,10 +9,10 @@ export const globalContainer: NodeContainer = {
   }
 }
 
-export function h(tag: Tag, props: Props, children: Children): VNode {
+export function h(tag: Tag, props: Props | null, children: Children): VNode {
   return {
     tag,
-    props,
+    props: props || {},
     children
   }
 }
