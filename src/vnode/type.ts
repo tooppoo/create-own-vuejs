@@ -5,6 +5,9 @@ export interface VNode {
   props: Props
   children: Children
 }
+export interface MountedVNode extends VNode {
+  el: HTMLElement
+}
 export type Tag = string
 export type Props = {
   [propName: string]: string

@@ -1,4 +1,4 @@
-import { Children, Props, Tag, VNode } from './type'
+import { Children, MountedVNode, Props, Tag, VNode } from './type'
 
 export interface NodeContainer {
   appendChild(el: HTMLElement): void
@@ -37,3 +37,14 @@ export function mount(
 
   container.appendChild(el)
 }
+
+export function unmount(vNode: MountedVNode) {
+  const parent = vNode.el.parentNode
+
+  if (parent) {
+    parent.removeChild(vNode.el)
+  } else {
+    throw new FailedUnmountError(`parent for ${JSON.stringify(vNode)} not found`)
+  }
+}
+export class FailedUnmountError extends Error {}
