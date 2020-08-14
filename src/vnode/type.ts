@@ -1,6 +1,6 @@
 
 export interface VNode {
-  el: HTMLElement | null
+  el?: HTMLElement
   tag: Tag
   props: Props
   children: Children
