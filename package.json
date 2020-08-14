@@ -12,6 +12,7 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
+    "serve": "node server/server.js",
     "test": "jest"
   }
 }
