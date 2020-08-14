@@ -1,10 +1,36 @@
 
-export interface VNode {
-  el?: HTMLElement
-  tag: Tag
-  props: Props
-  children: Children
+export class VNode {
+  static valueOf(
+    tag: Tag,
+    props: Props | null,
+    children: Children
+  ): VNode {
+    return new VNode(
+      tag,
+      props || {},
+      children
+    )
+  }
+  private _el: HTMLElement | null = null
+  private constructor(
+    readonly tag: Tag,
+    readonly props: Props,
+    readonly children: Children
+  ) {
+  }
+
+  get el(): HTMLElement {
+    return (this._el = document.createElement(this.tag))
+  }
+  set el(el: HTMLElement) {
+    this._el = el
+  }
+
+  sameTagWith(other: VNode): boolean {
+    return this.tag === other.tag
+  }
 }
+
 export interface MountedVNode extends VNode {
   el: HTMLElement
   children: MountedChildren

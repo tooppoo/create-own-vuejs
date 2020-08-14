@@ -13,14 +13,14 @@ describe(mount, () => {
     describe('子がテキスト', () => {
       it('HTMLの子要素がテキスト', () => {
         const tag = 'h1'
-        const vNode: VNode = {
+        const vNode: VNode = VNode.valueOf(
           tag,
-          props: {
+          {
             id: 'test',
             class: 'test',
           },
-          children: 'Children'
-        }
+          'Children'
+        )
 
         const mockContainer = new MockRootContainer()
         mount(vNode, mockContainer)
@@ -35,28 +35,28 @@ describe(mount, () => {
     describe('子がVNode', () => {
       describe('HTMLの子要素がHTML', () => {
         const rootTag = 'h1'
-        const vNode: VNode = {
-          tag: rootTag,
-          props: {},
-          children: [
-            {
-              tag: 'div',
-              props: { id: 'div' },
-              children: '子要素'
-            },
-            {
-              tag: 'span',
-              props: { class: 'span' },
-              children: [
-                {
-                  tag: 'label',
-                  props: { class: 'label' },
-                  children: '孫要素'
-                }
+        const vNode: VNode = VNode.valueOf(
+          rootTag,
+          {},
+          [
+            VNode.valueOf(
+              'div',
+              { id: 'div' },
+              '子要素'
+            ),
+            VNode.valueOf(
+              'span',
+              { class: 'span' },
+              [
+                VNode.valueOf(
+                  'label',
+                  { class: 'label' },
+                  '孫要素'
+                )
               ]
-            }
+            )
           ]
-        }
+        )
 
         const mockContainer = new MockRootContainer()
         mount(vNode, mockContainer)

@@ -10,18 +10,14 @@ export const globalContainer: NodeContainer = {
 }
 
 export function h(tag: Tag, props: Props | null, children: Children): VNode {
-  return {
-    tag,
-    props: props || {},
-    children
-  }
+  return VNode.valueOf(tag, props, children)
 }
 
 export function mount(
   vNode: VNode,
   container: NodeContainer = globalContainer
 ) {
-  const el = (vNode.el = document.createElement(vNode.tag))
+  const el = vNode.el
 
   Object.entries(vNode.props).forEach(([name, value]) =>
     el.setAttribute(name, value)
@@ -55,7 +51,7 @@ export function patch(n1: MountedVNode, n2: MountedVNode): void {
 
   n2.el = el
 
-  if (n1.tag !== n2.tag) {
+  if (n1.sameTagWith(n2)) {
     mount(n2, el.parentNode)
     unmount(n1)
 
