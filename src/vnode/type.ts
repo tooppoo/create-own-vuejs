@@ -11,19 +11,13 @@ export class VNode {
       children
     )
   }
-  private _el: HTMLElement | null = null
+  public el: HTMLElement
   private constructor(
     readonly tag: Tag,
     readonly props: Props,
     readonly children: Children
   ) {
-  }
-
-  get el(): HTMLElement {
-    return (this._el = document.createElement(this.tag))
-  }
-  set el(el: HTMLElement) {
-    this._el = el
+    this.el = document.createElement(this.tag)
   }
 
   sameTagWith(other: VNode): boolean {
