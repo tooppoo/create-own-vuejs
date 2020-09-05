@@ -1,6 +1,6 @@
 import { h, mount } from '../../src/vnode/handler'
 
-const node1 = h('div', { class: 'conatiner' }, [
+const node1 = h('div', { class: 'container' }, [
   h('div', null, 'X'),
   h('span', null, 'hello'),
   h('span', null, 'world'),
