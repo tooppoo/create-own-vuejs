@@ -1,7 +1,7 @@
 import { ReactiveDependency } from './effect'
 
 type CanReactive = { [key: string]: unknown }
-export const reactive = <T extends CanReactive>(obj: T) => {
+export const reactive = <T extends CanReactive>(obj: T): T => {
   Object.keys(obj).forEach((key) => {
     const deps = new ReactiveDependency()
 
@@ -23,7 +23,6 @@ export const reactive = <T extends CanReactive>(obj: T) => {
         deps.notify()
       }
     })
-
-    return obj
   })
+  return obj
 }

@@ -1,11 +1,23 @@
 import { ReactiveDependency, watchEffect } from '../../src/reactive/effect'
+import { reactive } from '../../src/reactive/reactive'
 
-const count = new ReactiveDependency(1)
-
-watchEffect(() => {
-  console.log('👻 value changed', count.value)
-});
-
-[1, 2, 3, 4].forEach((index) => {
-  setTimeout(() => count.value += 1, index * 1000)
+const state = reactive({
+  count: 1,
+  name: 'Marc'
 })
+
+watchEffect(
+  () => console.log('👻 state changed', state.count, state.name)
+);
+
+setTimeout(() => {
+  state.count += 1
+  state.name = 'Johnny'
+}, 3000)
+setTimeout(() => {
+  state.count += 1
+}, 5000)
+setTimeout(() => {
+  state.count += 1
+  state.name = 'Fowler'
+}, 10000)
