@@ -3,7 +3,7 @@ import typescript from 'rollup-plugin-typescript2'
 import pkg from './package.json'
 
 const files = [
-  'index', 'count'
+  'index', 'count', 'click'
 ]
 export default files.map(f => ({
   input: path.resolve(__dirname, 'public', 'js', `${f}.ts`),
