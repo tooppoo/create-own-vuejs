@@ -9,29 +9,16 @@ export const watchEffect = (fn: () => void) => {
   activeEffect = null
 }
 
-export class ReactiveDependency<T> {
+export class ReactiveDependency {
   private subscribers = new Set<Effect>()
 
-  constructor(private _value: T) {}
-
-  get value(): T {
-    this.depend()
-
-    return this._value
-  }
-  set value(newVal: T) {
-    this._value = newVal
-
-    this.notify()
-  }
-
-  private depend() {
+  depend() {
     if (activeEffect) {
       this.subscribers.add(activeEffect)
     }
   }
 
-  private notify() {
+  notify() {
     this.subscribers.forEach(subscriber => subscriber())
   }
 }
