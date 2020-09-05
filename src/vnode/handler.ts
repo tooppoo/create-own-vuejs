@@ -41,10 +41,10 @@ export function unmount(vNode: MountedVNode) {
 export class FailedUnmountError extends Error {}
 
 export function patch(n1: MountedVNode, n2: MountedVNode): void {
-  const el = n1.el
-  if (!el.parentNode) return
-
-  n2.el = el
+  const el = (n2.el = n1.el)
+  if (!el.parentNode) {
+    throw new Error(`parent of ${n1} not found`)
+  }
 
   if (n1.sameTagWith(n2)) {
     mount(n2, el.parentNode)
@@ -55,7 +55,6 @@ export function patch(n1: MountedVNode, n2: MountedVNode): void {
   // Nodes have different tags
   if (typeof n2.children === 'string') {
     el.textContent = n2.children
-
     return
   }
 
