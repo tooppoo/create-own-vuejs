@@ -9,17 +9,17 @@ export const watchEffect = (fn: () => void) => {
   activeEffect = null
 }
 
-class ReactiveDependency {
+export class ReactiveDependency<T> {
   private subscribers = new Set<Effect>()
 
-  constructor(private _value: unknown) {}
+  constructor(private _value: T) {}
 
-  get value(): unknown {
+  get value(): T {
     this.depend()
 
     return this._value
   }
-  set value(newVal: unknown) {
+  set value(newVal: T) {
     this._value = newVal
 
     this.notify()
