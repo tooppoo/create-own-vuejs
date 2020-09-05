@@ -12,7 +12,7 @@ export function mount(
   vNode: VNode,
   container: NodeContainer
 ) {
-  const el = vNode.el
+  const el = vNode.recreate().el
 
   Object.entries(vNode.props).forEach(([name, value]) =>
     el.setAttribute(name, value)
