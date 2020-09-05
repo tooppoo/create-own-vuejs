@@ -3,11 +3,6 @@ import { Children, MountedVNode, Props, Tag, VNode } from './type'
 export interface NodeContainer {
   appendChild(el: HTMLElement): void
 }
-export const globalContainer: NodeContainer = {
-  appendChild(el: HTMLElement) {
-    console.log(el)
-  }
-}
 
 export function h(tag: Tag, props: Props | null, children: Children): VNode {
   return VNode.valueOf(tag, props, children)
@@ -15,7 +10,7 @@ export function h(tag: Tag, props: Props | null, children: Children): VNode {
 
 export function mount(
   vNode: VNode,
-  container: NodeContainer = globalContainer
+  container: NodeContainer
 ) {
   const el = vNode.el
 
