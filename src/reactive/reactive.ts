@@ -2,27 +2,27 @@ import { ReactiveDependency } from './effect'
 
 type CanReactive = { [key: string]: unknown }
 export const reactive = <T extends CanReactive>(obj: T): T => {
-  Object.keys(obj).forEach((key) => {
-    const deps = new ReactiveDependency()
+  const depsMap: { [key: string]: ReactiveDependency } = {}
 
-    let value = obj[key]
+  return new Proxy(obj, {
+    get(target, prop: string) {
+      const deps = depsMap[prop] || (depsMap[prop] = new ReactiveDependency())
 
-    // 上書き？vue3ではProxyオブジェクト使ってたような
-    Object.defineProperty(obj, key, {
-      get() {
-        deps.depend()
+      deps.depend()
 
-        return value
-      },
-      set(newValue: unknown) {
-        if (newValue === value) {
-          return
-        }
+      return target[prop]
+    },
+    set(target, prop: keyof T, newValue) {
+      if (target[prop] === newValue) return true
 
-        value = newValue
+      target[prop] = newValue
+
+      const deps = depsMap[prop as string]
+      if (deps) {
         deps.notify()
       }
-    })
+
+      return true
+    }
   })
-  return obj
 }
