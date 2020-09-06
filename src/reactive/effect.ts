@@ -13,7 +13,11 @@ export const watchEffect = (effect: () => void) => {
   activeEffect = null
 }
 
-export class ReactiveDependency {
+export interface Dependency {
+  depend(): void
+  notify(): void
+}
+export class ReactiveDependency implements Dependency {
   private subscribers = new Set<Effect>()
 
   depend() {

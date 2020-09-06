@@ -1,14 +1,13 @@
-import { ReactiveDependency } from './effect'
+import { ReactiveDependency, Dependency } from './effect'
 
 type CanReactive = { [key: string]: unknown }
 export const reactive = <T extends CanReactive>(obj: T): T => {
-  const depsMap: { [key: string]: ReactiveDependency } = {}
+  const depsMap = new DependencyMap<T>()
 
+  // 必要になるまで、個別のdependencyオブジェクトは生成しない
   return new Proxy(obj, {
-    get(target, prop: string) {
-      const deps = depsMap[prop] || (depsMap[prop] = new ReactiveDependency())
-
-      deps.depend()
+    get(target, prop: keyof T) {
+      depsMap.dependTo(prop)
 
       return target[prop]
     },
@@ -16,13 +15,32 @@ export const reactive = <T extends CanReactive>(obj: T): T => {
       if (target[prop] === newValue) return true
 
       target[prop] = newValue
-
-      const deps = depsMap[prop as string]
-      if (deps) {
-        deps.notify()
-      }
+      depsMap.notifyTo(prop)
 
       return true
     }
   })
+}
+
+class DependencyMap<T> {
+  private map: { [key: string]: ReactiveDependency } = {}
+
+  dependTo(key: keyof T) {
+    const prop = key as string
+    const dep = this.map[prop] ?
+      this.map[prop] :
+      (this.map[prop] = new ReactiveDependency())
+
+    dep.depend()
+  }
+  notifyTo(key: keyof T) {
+    const prop = key as string
+    const dep = this.map[prop] || nullDependency
+
+    dep.notify()
+  }
+}
+const nullDependency: Dependency = {
+  depend: () => { },
+  notify: () => { },
 }
