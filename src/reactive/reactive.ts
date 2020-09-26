@@ -1,6 +1,6 @@
 import { ReactiveDependency, Dependency } from './effect'
 
-type CanReactive = { [key: string]: unknown }
+export type CanReactive = { [key: string]: unknown }
 export const reactive = <T extends CanReactive>(obj: T): T => {
   const depsMap = new DependencyMap<T>()
 

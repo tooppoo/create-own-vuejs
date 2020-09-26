@@ -5,6 +5,14 @@ describe(reactive, () => {
   type SUT = { count: number, name: string }
   const createSut = () => reactive<SUT>({ count: 1, name: 'Martin' })
 
+  describe('参照する前に更新', () => {
+    it('正常に更新できること', () => {
+      const sut = createSut()
+
+      expect(() => sut.count += 1).not.toThrowError()
+    })
+  })
+
   describe('複数箇所変更', () => {
     describe('リアクティブ発火回数', () => {
       describe.each([
