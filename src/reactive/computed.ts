@@ -1,12 +1,22 @@
 import { RefReactive, ref, ReactivePrimitive } from './ref'
 import { watchEffect } from './effect'
 
-export const computed =
-  <T extends ReactivePrimitive>(f: () => T): Readonly<RefReactive<Readonly<T>>> => {
-    let value: T
+type Getter<T> = () => T
+interface Mutable<T> {
+  get(): T
+  set(t: T): void
+}
+type Computable<T> = Getter<T> | Mutable<T>
 
+type Computed<T> = RefReactive<Readonly<T>>
+export function computed<T extends ReactivePrimitive>(t: Getter<T>): Readonly<Computed<T>>
+export function computed<T extends ReactivePrimitive>(t: Mutable<T>): Computed<T>
+export function computed<T extends ReactivePrimitive>(t: Computable<T>): Computed<T> | Readonly<Computed<T>> {
+  let value: T
+
+  if (isGetter(t)) {
     watchEffect(() => {
-      value = f()
+      value = t()
     })
 
     return {
@@ -14,4 +24,23 @@ export const computed =
         return value
       }
     }
+  } else {
+    watchEffect(() => {
+      value = t.get()
+    })
+    const update = (v: T) => t.set(v)
+
+    return {
+      get value(): T {
+        return value
+      },
+      set value(v: T) {
+        update(v)
+      }
+    }
   }
+}
+
+function isGetter<T>(t: Computable<T>): t is Getter<T> {
+  return typeof t === 'function'
+}
