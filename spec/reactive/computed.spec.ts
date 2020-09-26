@@ -27,6 +27,9 @@ describe('computed', () => {
         set: val => count.value = val - 2
       })
 
+      expect(count.value).toBe(1)
+      expect(sut.value).toBe(4)
+
       sut.value = 1
 
       expect(count.value).toBe(-1)
